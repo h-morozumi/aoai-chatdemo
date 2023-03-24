@@ -1,5 +1,4 @@
 # aoai-chatdemo
-AOAI Chat Demo Application
 
 ## Project setup
 ```
