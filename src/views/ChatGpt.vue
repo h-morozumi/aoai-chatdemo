@@ -5,7 +5,7 @@
 </template>
 <script>
 export default {
-  name: 'AboutView',
+  name: 'ChatGpt',
   components: {},
   data() {
     return {};
