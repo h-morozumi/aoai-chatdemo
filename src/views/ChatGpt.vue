@@ -11,12 +11,13 @@
     <div v-if="result">{{ result }}</div>
     <div v-else>結果がありません</div>
   </div>
-    <div class="container">
+
+  <div class="container">
         <vue-markdown-it :source="source" />
     </div>
     <div class="chat">
         <div class="messages">
-          <ChatMessages v-for="message in messages" :key="message.id" :message="message.text" :is-sent="message.isSent" />
+          <chatMessages v-for="message in messages" :key="message.id" :message="message.text" :is-sent="message.isSent" />
         </div>
         <div class="input">
           <input v-model="newMessage" @keyup.enter="sendMessage" type="text" placeholder="Type your message here..." />
@@ -29,8 +30,8 @@ import 'highlight.js/styles/monokai.css';
 import ChatMessages from '@/components/ChatMessages.vue';
 import axios from 'axios';
 
-const url = '';
-const apiKey = '';
+const url = process.env.VUE_APP_AOAI_URL;
+const apiKey = process.env.VUE_APP_AOAI_APIKEY;
 const headers = {
   'Content-Type': 'application/json',
   'api-key': apiKey,
@@ -62,7 +63,7 @@ export default {
   name: 'ChatGpt',
   components: {
     VueMarkdownIt,
-    ChatMessages
+    ChatMessages,
   },
   data() {
     return {
