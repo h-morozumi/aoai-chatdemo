@@ -2,6 +2,15 @@
     <div class="chatgpt">
       <h1>This is an ChatGPT page</h1>
     </div>
+    <div>
+    <form @submit.prevent="handleSubmit">
+      <label for="input">入力してください:</label>
+      <input type="text" v-model="input" id="input">
+      <button type="submit">送信</button>
+    </form>
+    <div v-if="result">{{ result }}</div>
+    <div v-else>結果がありません</div>
+  </div>
     <div class="container">
         <vue-markdown-it :source="source" />
     </div>
@@ -12,12 +21,27 @@
         <div class="input">
           <input v-model="newMessage" @keyup.enter="sendMessage" type="text" placeholder="Type your message here..." />
         </div>
-    </div>    
+    </div>
 </template>
 <script>
 import VueMarkdownIt from 'vue3-markdown-it';
 import 'highlight.js/styles/monokai.css';
 import ChatMessages from '@/components/ChatMessages.vue';
+import axios from 'axios';
+
+const url = '';
+const apiKey = '';
+const headers = {
+  'Content-Type': 'application/json',
+  'api-key': apiKey,
+};
+const messageStack = [];
+messageStack.push({ role: 'system', content: 'You are a helpful assistant.' });
+
+const data = {
+  messages: messageStack
+};
+
 
 const source = `
 # Hello
@@ -49,6 +73,8 @@ export default {
         ],
         newMessage: '',
         nextMessageId: 3,
+        input: '',
+        result: null,
     };
   },
   computed: {},
@@ -64,6 +90,22 @@ export default {
             isSent: true,
         });
         this.newMessage = '';
+    },
+    async handleSubmit() {
+      messageStack.push({ role: 'user', content: this.input });
+      this.input = '';
+      axios.post(url, data, { headers })
+      .then(response => {
+        console.log(response.data);
+        console.log(response.data.choices[0].message)
+        const resJson = response.data.choices[0].message;
+        messageStack.push({ role: resJson.role, content: resJson.content });
+        console.log(messageStack)
+        this.result = response.data;
+      })
+      .catch(error => {
+        console.error(error);
+      });
     },
   },
   props: {},
