@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ChatGpt from '../views/ChatGpt.vue'
+import MarkdownView from '../views/MarkdownView.vue'
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     path: '/chatgpt',
     name: 'chatgpt',
     component : ChatGpt
+  },
+  {
+    path: '/markdown',
+    name: 'markdown',
+    component : MarkdownView
   }
 ]
 
