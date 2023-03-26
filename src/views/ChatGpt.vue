@@ -1,29 +1,27 @@
 <template>
-    <div class="chatgpt">
-      <h1>This is an ChatGPT page</h1>
+  <v-container>
+    <div class="d-flex">
+      <v-container class="mx-2">
+        <v-form validate-on="submit" @submit.prevent="handleSubmit">
+          <v-textarea clearable label="入力してください" variant="outlined" v-model="input"></v-textarea>
+          <v-btn type="submit" block class="mt-2">送信</v-btn>
+        </v-form>
+      </v-container>
+      <v-container class="mx-2">
+        <div class="container">
+          <div v-if="result">
+            <div class="view">
+              {{ result }}
+            </div>
+          </div>
+          <div v-else>結果がありません</div>
+        </div>
+      </v-container>
     </div>
-    <div>
-    <form @submit.prevent="handleSubmit">
-      <label for="input">入力してください:</label>
-      <input type="text" v-model="input" id="input">
-      <button type="submit">送信</button>
-    </form>
-    <div v-if="result">{{ result }}</div>
-    <div v-else>結果がありません</div>
-  </div>
-
-  <div class="chat">
-    <div class="messages">
-      <chatMessages v-for="message in messages" :key="message.id" :message="message.text" :is-sent="message.isSent" />
-    </div>
-    <div class="input">
-      <input v-model="newMessage" @keyup.enter="sendMessage" type="text" placeholder="Type your message here..." />
-    </div>
-  </div>
+  </v-container>
 </template>
 
 <script>
-import ChatMessages from '@/components/ChatMessages.vue';
 import axios from 'axios';
 
 const url = process.env.VUE_APP_AOAI_URL;
@@ -41,17 +39,9 @@ const data = {
 
 export default {
   name: 'ChatGpt',
-  components: {
-    ChatMessages,
-  },
+  components: {},
   data() {
     return {
-        messages: [
-          { id: 1, text: 'Hi there!', isSent: false },
-          { id: 2, text: 'Hey!', isSent: true },
-        ],
-        newMessage: '',
-        nextMessageId: 3,
         input: '',
         result: null,
     };
@@ -59,17 +49,6 @@ export default {
   computed: {},
   mounted() {},
   methods: {
-    sendMessage() {
-        if(!this.newMessage){
-            return;
-        }
-        this.messages.push({
-            id: this.nextMessageId ++,
-            text: this.newMessage,
-            isSent: true,
-        });
-        this.newMessage = '';
-    },
     async handleSubmit() {
       messageStack.push({ role: 'user', content: this.input });
       this.input = '';
@@ -91,44 +70,10 @@ export default {
 };
 </script>
 <style scoped>
-.container {
-  margin: 0 auto;
-  margin-top: 200px;
-  min-height: 100vh;
-  width: 500px;
-  justify-content: center;
-  align-items: center;
-  text-align: left;
-  background-color: #c0c0c0;
-}
-
-.chat {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.messages {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.input {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-}
-
-input[type="text"] {
-  flex: 1;
-  margin: 5px;
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  box-shadow: 0 0 5px rgba(0, 0, 00.1);
-  font-size: 16px;
-}
+  .view {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    text-align: left;
+    max-width: 200px;
+  }
 </style>
